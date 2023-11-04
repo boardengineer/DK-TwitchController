@@ -1,0 +1,17 @@
+{
+	"name": "TwitchController",
+	"namespace": "Pasha",
+	"version_number": "1.0.0",
+	"description": "Connects to twitch lets, does cool stuff!",
+	"website_url": "https://",
+	"dependencies": [],
+	"extra": {
+		"godot": {
+			"incompatibilities": [],
+			"authors": ["BoardEngineer"],
+			"compatible_mod_loader_version": ["3.0.0"],
+			"compatible_game_version": ["3.0"],
+			"config_defaults": {}
+		}
+	}
+}
