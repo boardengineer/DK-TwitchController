@@ -182,11 +182,12 @@ func _token_refresh_request_callback(_result, _response_code, _headers, body):
 func get_auth_code():
 	var _redir_error = redirect_server.listen(port)
 	
+	var encoded_scopes = "user:read:broadcast user:read:chat chat:read chat:edit".percent_encode()
 	var body_parts = [
 		"response_type=%s"    % "code",
 		"client_id=%s"        % client_id,
-		"redirect_uri=%s%s"     % [netlify_url, auth_redirect_url_suffix],
-		"scope=%s"            % "user%3Aread%3Abroadcast",
+		"redirect_uri=%s%s"   % [netlify_url, auth_redirect_url_suffix],
+		"scope=%s"            % encoded_scopes,
 	]
 	
 	var url = twitch_auth_url + "?" + PoolStringArray(body_parts).join("&")

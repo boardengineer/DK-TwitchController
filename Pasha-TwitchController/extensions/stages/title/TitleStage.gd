@@ -10,6 +10,7 @@ func _ready():
 		return
 	
 	var auth_handler = $"/root/AuthHandler"
+	
 	auth_handler.connect("auth_in_progress", self, "make_button_yellow")
 	auth_handler.connect("auth_failure", self, "make_button_red")
 	auth_handler.connect("auth_success", self, "make_button_green")
