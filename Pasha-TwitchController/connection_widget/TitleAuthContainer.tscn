@@ -1,0 +1,108 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://gui/fonts/cyrillic/FontCyButton.tres" type="DynamicFont" id=1]
+[ext_resource path="res://mods-unpacked/Pasha-TwitchController/connection_widget/TwitchAuthButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://mods-unpacked/Pasha-TwitchController/connection_widget/title_auth_container.gd" type="Script" id=3]
+[ext_resource path="res://mods-unpacked/Pasha-TwitchController/connection_widget/alert-icon.png" type="Texture" id=4]
+
+[sub_resource type="StyleBoxFlat" id=1]
+
+[sub_resource type="StyleBoxFlat" id=2]
+
+[node name="AuthContainer" type="VBoxContainer"]
+margin_left = 1500.0
+margin_top = 63.0
+margin_right = 1755.0
+margin_bottom = 246.0
+script = ExtResource( 3 )
+
+[node name="ConnectButton" parent="." instance=ExtResource( 2 )]
+margin_top = 0.0
+margin_right = 304.0
+margin_bottom = 75.0
+rect_min_size = Vector2( 300, 0 )
+focus_mode = 1
+icon_align = 1
+
+[node name="UsernameContainer" type="HBoxContainer" parent="."]
+margin_top = 79.0
+margin_right = 304.0
+margin_bottom = 129.0
+
+[node name="HBoxContainer" type="MarginContainer" parent="UsernameContainer"]
+margin_right = 225.0
+margin_bottom = 50.0
+
+[node name="UsernameText" type="TextEdit" parent="UsernameContainer/HBoxContainer"]
+margin_right = 225.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 225, 50 )
+custom_fonts/font = ExtResource( 1 )
+text = "username"
+
+[node name="UsernameWarning" type="TextureRect" parent="UsernameContainer/HBoxContainer"]
+margin_left = 175.0
+margin_right = 225.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 8
+size_flags_vertical = 5
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 1
+
+[node name="SaveButton" type="Button" parent="UsernameContainer"]
+margin_left = 229.0
+margin_right = 304.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 75, 50 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "Connect"
+
+[node name="ChannelNameContainer" type="HBoxContainer" parent="."]
+margin_top = 133.0
+margin_right = 304.0
+margin_bottom = 183.0
+
+[node name="HBoxContainer" type="MarginContainer" parent="ChannelNameContainer"]
+margin_right = 225.0
+margin_bottom = 50.0
+
+[node name="ChannelNameText" type="TextEdit" parent="ChannelNameContainer/HBoxContainer"]
+margin_right = 225.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 225, 50 )
+custom_fonts/font = ExtResource( 1 )
+text = "channel name"
+
+[node name="ChannelNameWarning" type="TextureRect" parent="ChannelNameContainer/HBoxContainer"]
+margin_left = 175.0
+margin_right = 225.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 8
+size_flags_vertical = 5
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 1
+
+[node name="SaveButton" type="Button" parent="ChannelNameContainer"]
+margin_left = 229.0
+margin_right = 304.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 75, 50 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
+disabled = true
+text = "Join"
+
+[connection signal="pressed" from="ConnectButton" to="." method="start_twitch_auth"]
+[connection signal="focus_entered" from="UsernameContainer/HBoxContainer/UsernameText" to="." method="_on_username_text_focus_entered"]
+[connection signal="focus_exited" from="UsernameContainer/HBoxContainer/UsernameText" to="." method="_on_username_text_focus_exited"]
+[connection signal="text_changed" from="UsernameContainer/HBoxContainer/UsernameText" to="." method="_on_username_text_changed"]
+[connection signal="pressed" from="UsernameContainer/SaveButton" to="." method="_on_save_username_pressed"]
+[connection signal="focus_entered" from="ChannelNameContainer/HBoxContainer/ChannelNameText" to="." method="_on_channel_text_focus_entered"]
+[connection signal="focus_exited" from="ChannelNameContainer/HBoxContainer/ChannelNameText" to="." method="_on_channel_text_focus_exited"]
+[connection signal="text_changed" from="ChannelNameContainer/HBoxContainer/ChannelNameText" to="." method="_on_channel_name_text_changed"]
+[connection signal="pressed" from="ChannelNameContainer/SaveButton" to="." method="_on_save_channel_name_pressed"]

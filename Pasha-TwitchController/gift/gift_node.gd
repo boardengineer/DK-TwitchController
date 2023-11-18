@@ -55,6 +55,8 @@ var channels : Dictionary = {}
 var commands : Dictionary = {}
 var image_cache : ImageCache
 
+var connected = false
+
 # Required permission to execute the command
 enum PermissionFlag {
 	EVERYONE = 0,
@@ -144,8 +146,8 @@ func data_received() -> void:
 			for tag in msg[0].split(";"):
 				var pair = tag.split("=")
 				tags[pair[0]] = pair[1]
-		if(OS.is_debug_build()):
-			print("> " + message)
+#		if(OS.is_debug_build()):
+#			print("> " + message)
 		handle_message(message, tags)
 
 # Registers a command on an object with a func to call, similar to connect(signal, instance, func).

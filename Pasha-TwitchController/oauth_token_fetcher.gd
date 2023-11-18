@@ -19,6 +19,8 @@ var twitch_auth_url = "https://id.twitch.tv/oauth2/authorize"
 
 var access_token = ""
 var refresh_token = ""
+var channel = ""
+var username = ""
 var expires_in
 
 var jwt
@@ -43,6 +45,9 @@ var read_write_url = false
 const CONFIG_FILENAME = "user://twitch-auth.cfg"
 const CONFIG_SECTION = "auth"
 
+func _init():
+	read_config_file()
+
 func _ready():
 	http_request_jwt = HTTPRequest.new()
 	add_child(http_request_jwt)
@@ -65,7 +70,6 @@ func _ready():
 	
 	# If we've logged on before, we should have a refresh token we can use
 	# to get underway
-	read_config_file()
 	request_access_token_refresh()
 
 func read_config_file():
@@ -76,6 +80,8 @@ func read_config_file():
 		return
 	
 	refresh_token = config.get_value(CONFIG_SECTION, "refresh_token", "")
+	channel = config.get_value(CONFIG_SECTION, "channel", "")
+	username = config.get_value(CONFIG_SECTION, "username", "")
 	
 	if config.has_section_key(CONFIG_SECTION, "client_id"):
 		client_id = config.get_value(CONFIG_SECTION, "client_id", "")
@@ -89,6 +95,8 @@ func save_config_file():
 	var config = ConfigFile.new()
 	
 	config.set_value(CONFIG_SECTION, "refresh_token", refresh_token)
+	config.set_value(CONFIG_SECTION, "channel", channel)
+	config.set_value(CONFIG_SECTION, "username", username)
 	
 	if read_write_client:
 		config.set_value(CONFIG_SECTION, "client_id", client_id)

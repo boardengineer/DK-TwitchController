@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://mods-unpacked/Pasha-TwitchController/twitch_icon.png" type="Texture" id=1]
+[ext_resource path="res://mods-unpacked/Pasha-TwitchController/connection_widget/twitch_icon.png" type="Texture" id=1]
 
 [sub_resource type="StyleBoxFlat" id=2]
 

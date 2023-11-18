@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/twitch_icon.png-35b865102553a7d008f4bffe1c90dfac.stex"
+path="res://.import/alert-icon.png-8d4b421201353046f78bda1ddefaf151.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://mods-unpacked/Pasha-TwitchController/twitch_icon.png"
-dest_files=[ "res://.import/twitch_icon.png-35b865102553a7d008f4bffe1c90dfac.stex" ]
+source_file="res://mods-unpacked/Pasha-TwitchController/connection_widget/alert-icon.png"
+dest_files=[ "res://.import/alert-icon.png-8d4b421201353046f78bda1ddefaf151.stex" ]
 
 [params]
 
