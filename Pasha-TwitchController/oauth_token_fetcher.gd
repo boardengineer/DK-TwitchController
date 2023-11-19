@@ -190,7 +190,8 @@ func _token_refresh_request_callback(_result, _response_code, _headers, body):
 func get_auth_code():
 	var _redir_error = redirect_server.listen(port)
 	
-	var encoded_scopes = "user:read:broadcast user:read:chat chat:read chat:edit".percent_encode()
+	var encoded_scopes = "user:read:chat chat:edit chat:read".percent_encode()
+	print_debug(encoded_scopes)
 	var body_parts = [
 		"response_type=%s"    % "code",
 		"client_id=%s"        % client_id,
@@ -202,3 +203,11 @@ func get_auth_code():
 	
 	emit_signal("auth_in_progress")
 	var _shell_result = OS.shell_open(url)
+
+func restart():
+	access_token = ""
+	refresh_token = ""
+	channel = ""
+	username = ""
+	
+	save_config_file()
