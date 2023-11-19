@@ -40,5 +40,4 @@ func _on_dome_vote_pressed():
 		print_debug(option)
 		print_debug(tr("upgrades." + option + ".title"))
 	
-#	gift_node.chat("Test messages are going to be sent on this channel, don't panic", "twitchslaysspire")
 	print_debug("pressed here")

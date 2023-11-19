@@ -2,9 +2,9 @@ extends Node
 
 const MOD_DIR = "Pasha-TwitchController/"
 var OAuthTokenFetcher = preload("res://mods-unpacked/Pasha-TwitchController/oauth_token_fetcher.gd")
-var GiftNode = preload("res://mods-unpacked/Pasha-TwitchController/gift/gift_node.gd")
+var ChatController = preload("res://mods-unpacked/Pasha-TwitchController/chat_controller.gd")
 
-var gift_node
+var chat_controller
 var auth_handler
 
 var is_twitch_connected = false
@@ -21,6 +21,6 @@ func _ready():
 	auth_handler.set_name("AuthHandler")
 	$"/root".call_deferred("add_child", auth_handler)
 	
-	gift_node = GiftNode.new()
-	gift_node.set_name("GiftNode")
-	$"/root".call_deferred("add_child", gift_node)
+	chat_controller = ChatController.new()
+	chat_controller.set_name("ChatController")
+	$"/root".call_deferred("add_child", chat_controller)
