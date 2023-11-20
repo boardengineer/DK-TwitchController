@@ -14,6 +14,8 @@ func _init(_modLoader = ModLoader):
 	var ext_dir = ModLoaderMod.get_unpacked_dir() + MOD_DIR + "extensions/"
 	
 	ModLoaderMod.install_script_extension(ext_dir + "stages/title/TitleStage.gd")
+	
+	ModLoaderMod.install_script_extension(ext_dir + "stages/loadout/LoadoutOption.gd")
 	ModLoaderMod.install_script_extension(ext_dir + "stages/loadout/LoadoutStage.gd")
 
 func _ready():

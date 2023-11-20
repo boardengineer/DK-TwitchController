@@ -73,11 +73,9 @@ func handle_message(message : String, tags : Dictionary) -> void:
 	var msg : PoolStringArray = message.split(" ", true, 3)
 	match msg[1]:
 		"001":
-			print_debug("Authentication successful.")
 			emit_signal("login_attempt", true)
 		"PRIVMSG":
 			emit_signal("chat_message", user_regex.search(msg[0]).get_string(), msg[2], tags, msg[3].right(1))
-			print_debug("message ? ", message)
 		"RECONNECT":
 			twitch_restarting = true
 		_:

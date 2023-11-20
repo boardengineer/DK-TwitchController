@@ -107,7 +107,7 @@ func maybe_connect_to_channel() -> void:
 	if has_valid_channel:
 		var channel = auth_handler.channel
 		chat_controller.join_channel(channel)
-#		chat_controller.chat("[BOT] Dome Keeper Bot Joined", channel)
+		chat_controller.chat("[BOT] Dome Keeper Bot Joined", channel)
 
 func login_attempt_callback(success : bool) -> void:
 	if success:

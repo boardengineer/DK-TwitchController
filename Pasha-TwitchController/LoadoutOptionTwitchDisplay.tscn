@@ -1,0 +1,23 @@
+[gd_scene format=2]
+
+[node name="HBoxContainer" type="HBoxContainer"]
+visible = false
+margin_top = 271.0
+margin_right = 444.0
+margin_bottom = 436.0
+rect_min_size = Vector2( 0, 165 )
+
+[node name="KeyLabel" type="Label" parent="."]
+margin_top = 75.0
+margin_right = 220.0
+margin_bottom = 89.0
+size_flags_horizontal = 3
+text = "Twitch Key"
+
+[node name="TallyLabel" type="Label" parent="."]
+margin_left = 224.0
+margin_top = 75.0
+margin_right = 444.0
+margin_bottom = 89.0
+size_flags_horizontal = 3
+text = "Vote Count"
