@@ -10,6 +10,7 @@
 margin_top = 100.0
 margin_right = 75.0
 margin_bottom = 175.0
+focus_mode = 1
 mouse_filter = 1
 custom_styles/hover = SubResource( 2 )
 custom_styles/normal = SubResource( 1 )

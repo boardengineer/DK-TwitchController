@@ -86,6 +86,7 @@ func handle_message(message : String, tags : Dictionary) -> void:
 func join_channel(channel : String) -> void:
 	var lower_channel : String = channel.to_lower()
 	send("JOIN #" + lower_channel)
+	connected = true
 
 func leave_channel(channel : String) -> void:
 	var lower_channel : String = channel.to_lower()

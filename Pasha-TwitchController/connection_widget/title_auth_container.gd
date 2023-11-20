@@ -4,10 +4,11 @@ var ChatController = preload("res://mods-unpacked/Pasha-TwitchController/chat_co
 
 onready var twitch_button = $ConnectButton
 
+onready var channel_name_save_button = $ChannelNameContainer/HBoxContainer/SaveButton
+onready var channel_name_text_edit = $ChannelNameContainer/HBoxContainer/TextEditContainer/ChannelNameText
+onready var channel_name_warning = $ChannelNameContainer/HBoxContainer/TextEditContainer/ChannelNameWarning
 
-onready var channel_name_save_button = $ChannelNameContainer/SaveButton
-onready var channel_name_text_edit = $ChannelNameContainer/HBoxContainer/ChannelNameText
-onready var channel_name_warning = $ChannelNameContainer/HBoxContainer/ChannelNameWarning
+onready var tooltip_container = $TooltipContainer
 
 var auth_handler
 var chat_controller
@@ -22,15 +23,17 @@ func _ready():
 	auth_handler = $"/root/AuthHandler"
 	
 	if auth_handler.access_token != "":
+		channel_name_save_button.disabled = false
 		make_connect_button_green()
 	
 	if auth_handler.channel != "":
+		channel_name_save_button.disabled = false
 		channel_name_text_edit.text = auth_handler.channel
 		_on_save_channel_name_pressed()
 	
 	auth_handler.connect("auth_in_progress", self, "make_connect_button_yellow")
 	auth_handler.connect("auth_failure", self, "make_connect_button_red")
-	auth_handler.connect("auth_success", self, "make_connect_button_green")
+	auth_handler.connect("auth_success", self, "auth_success")
 	
 	chat_controller.connect("twitch_connected", self, "twitch_connected")
 	chat_controller.connect("login_attempt", self, "login_attempt_callback")
@@ -59,7 +62,7 @@ func make_connect_button_green():
 	change_button_color(twitch_button, Color(0,.5,0))
 
 func _on_channel_name_text_changed():
-	change_button_color(channel_name_save_button, Color(1,1,0))
+	change_button_color(channel_name_save_button, Color(.5,.5,0))
 
 func _on_save_channel_name_pressed():
 	if channel_name_text_edit.text == "":
@@ -85,9 +88,14 @@ func change_button_color(button, color) -> void:
 	button.add_stylebox_override("hover", stylebox_flat_hover)
 
 func _on_channel_text_focus_entered():
+	if auth_handler.channel == "":
+		channel_name_text_edit.text = ""
 	channel_name_warning.hide()
 
 func _on_channel_text_focus_exited():
+	if channel_name_text_edit.text == "":
+		channel_name_text_edit.text = "Channel Name"
+	
 	channel_name_warning.show()
 
 func twitch_connected():
@@ -99,6 +107,7 @@ func maybe_connect_to_channel() -> void:
 	if has_valid_channel:
 		var channel = auth_handler.channel
 		chat_controller.join_channel(channel)
+#		chat_controller.chat("[BOT] Dome Keeper Bot Joined", channel)
 
 func login_attempt_callback(success : bool) -> void:
 	if success:
@@ -111,6 +120,7 @@ func twitch_disconnected():
 
 func _on_reset_twitch():
 	auth_handler.restart()
+	twitch_oauth_complete = false
 	
 	change_button_color(twitch_button, Color(.6,.6,.6))
 	
@@ -120,11 +130,22 @@ func _on_reset_twitch():
 	# Add a new chat controller
 	chat_controller = ChatController.new()
 	chat_controller.set_name("ChatController")
+	chat_controller.connected = false
 	$"/root".call_deferred("add_child", chat_controller)
+	
 	chat_controller.connect("twitch_connected", self, "twitch_connected")
 	chat_controller.connect("login_attempt", self, "login_attempt_callback")
+	chat_controller.connect("twitch_disconnected", self, "twitch_disconnected")
 	chat_controller.connect_to_twitch()
 	
 	channel_name_text_edit.text = "Channel Name"
-	channel_name_warning.show()
+	channel_name_save_button.text = "Join"
 	channel_name_save_button.disabled = true
+	channel_name_warning.show()
+
+
+func _on_channel_container_mouse_entered():
+	tooltip_container.show()
+
+func _on_channel_container_mouse_exited():
+	tooltip_container.hide()

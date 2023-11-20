@@ -20,7 +20,6 @@ var twitch_auth_url = "https://id.twitch.tv/oauth2/authorize"
 var access_token = ""
 var refresh_token = ""
 var channel = ""
-var username = ""
 var expires_in
 
 var jwt
@@ -81,7 +80,6 @@ func read_config_file():
 	
 	refresh_token = config.get_value(CONFIG_SECTION, "refresh_token", "")
 	channel = config.get_value(CONFIG_SECTION, "channel", "")
-	username = config.get_value(CONFIG_SECTION, "username", "")
 	
 	if config.has_section_key(CONFIG_SECTION, "client_id"):
 		client_id = config.get_value(CONFIG_SECTION, "client_id", "")
@@ -96,7 +94,6 @@ func save_config_file():
 	
 	config.set_value(CONFIG_SECTION, "refresh_token", refresh_token)
 	config.set_value(CONFIG_SECTION, "channel", channel)
-	config.set_value(CONFIG_SECTION, "username", username)
 	
 	if read_write_client:
 		config.set_value(CONFIG_SECTION, "client_id", client_id)
@@ -113,7 +110,7 @@ func _process(_delta):
 		var request = connection.get_string(connection.get_available_bytes())
 		
 		var page = """
-Brotato has Successfully Connected to Twitch, Please close this tab...
+Dome Keeper has Successfully Connected to Twitch, Please close this tab...
 		"""
 		
 		if request:
@@ -208,6 +205,5 @@ func restart():
 	access_token = ""
 	refresh_token = ""
 	channel = ""
-	username = ""
 	
 	save_config_file()
