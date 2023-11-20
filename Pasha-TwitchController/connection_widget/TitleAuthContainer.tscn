@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://gui/fonts/cyrillic/FontCyButton.tres" type="DynamicFont" id=1]
 [ext_resource path="res://mods-unpacked/Pasha-TwitchController/connection_widget/TwitchAuthButton.tscn" type="PackedScene" id=2]
@@ -8,6 +8,9 @@
 [sub_resource type="StyleBoxFlat" id=1]
 
 [sub_resource type="StyleBoxFlat" id=2]
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0, 0, 0, 1 )
 
 [node name="AuthContainer" type="VBoxContainer"]
 margin_left = 1500.0
@@ -83,6 +86,7 @@ margin_left = -200.0
 margin_top = 97.0
 margin_right = -10.0
 margin_bottom = 297.0
+custom_styles/normal = SubResource( 3 )
 text = "Press the twitch Icon to connect to twitch through a web browser.  Then enter the channel the vote bot will chat through and press \"join\".  A notification message should pop up in chat."
 autowrap = true
 

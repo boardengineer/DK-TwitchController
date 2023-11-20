@@ -78,8 +78,6 @@ func handle_message(message : String, tags : Dictionary) -> void:
 			emit_signal("chat_message", user_regex.search(msg[0]).get_string(), msg[2], tags, msg[3].right(1))
 		"RECONNECT":
 			twitch_restarting = true
-		_:
-			emit_signal("unhandled_message", message, tags)
 
 func join_channel(channel : String) -> void:
 	var lower_channel : String = channel.to_lower()
