@@ -82,16 +82,17 @@ func handle_message(message : String, tags : Dictionary) -> void:
 func join_channel(channel : String) -> void:
 	var lower_channel : String = channel.to_lower()
 	send("JOIN #" + lower_channel)
-	connected = true
 
 func leave_channel(channel : String) -> void:
 	var lower_channel : String = channel.to_lower()
 	send("PART #" + lower_channel)
 
 func connection_established(_protocol : String) -> void:
+	connected = true
 	emit_signal("twitch_connected")
 
 func connection_closed(was_clean_close : bool) -> void:
+	connected = false
 	if(twitch_restarting):
 		connect_to_twitch()
 		yield(self, "twitch_connected")

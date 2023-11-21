@@ -23,6 +23,7 @@ func _ready():
 	chat_controller.connect("chat_message", self, "chat_message")
 	
 	start_twitch_button = Button.new()
+	Style.init(start_twitch_button)
 	start_twitch_button.text = "Start Twitch Vote"
 	start_twitch_button.connect("pressed", self, "start_twitch_vote")
 	popup_container.add_child(start_twitch_button)

@@ -1,79 +1,74 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://gui/fonts/cyrillic/FontCyButton.tres" type="DynamicFont" id=1]
-[ext_resource path="res://mods-unpacked/Pasha-TwitchController/connection_widget/TwitchAuthButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://mods-unpacked/Pasha-TwitchController/connection_widget/title_auth_container.gd" type="Script" id=3]
-[ext_resource path="res://mods-unpacked/Pasha-TwitchController/connection_widget/alert-icon.png" type="Texture" id=4]
-
-[sub_resource type="StyleBoxFlat" id=1]
-
-[sub_resource type="StyleBoxFlat" id=2]
 
 [sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0, 0, 0, 1 )
 
 [node name="AuthContainer" type="VBoxContainer"]
-margin_left = 1500.0
-margin_top = 672.0
-margin_right = 1804.0
-margin_bottom = 855.0
+margin_right = 304.0
+margin_bottom = 183.0
+size_flags_vertical = 2
+alignment = 1
 script = ExtResource( 3 )
 
-[node name="ConnectButton" parent="." instance=ExtResource( 2 )]
-margin_top = 0.0
-margin_right = 304.0
-margin_bottom = 75.0
-rect_min_size = Vector2( 300, 0 )
-icon_align = 1
+[node name="InstructionLabel" type="Label" parent="."]
+margin_top = 3.0
+margin_right = 500.0
+margin_bottom = 17.0
+text = "Please Authenticate with Twitch"
+align = 1
 
-[node name="ChannelNameContainer" type="MarginContainer" parent="."]
-margin_top = 79.0
-margin_right = 304.0
-margin_bottom = 129.0
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+margin_top = 21.0
+margin_right = 500.0
+margin_bottom = 71.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ChannelNameContainer"]
-margin_right = 304.0
+[node name="AuthenticateButton" type="Button" parent="HBoxContainer2"]
+margin_right = 500.0
 margin_bottom = 50.0
+rect_min_size = Vector2( 500, 50 )
+text = "Authenticate Twitch"
 
-[node name="TextEditContainer" type="MarginContainer" parent="ChannelNameContainer/HBoxContainer"]
-margin_right = 225.0
-margin_bottom = 50.0
-mouse_filter = 1
+[node name="AuthenticatedLabel" type="Label" parent="HBoxContainer2"]
+visible = false
+margin_left = 504.0
+margin_top = 18.0
+margin_right = 639.0
+margin_bottom = 32.0
+text = "Twitch Authenticated"
 
-[node name="ChannelNameText" type="TextEdit" parent="ChannelNameContainer/HBoxContainer/TextEditContainer"]
-margin_right = 225.0
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_top = 75.0
+margin_right = 500.0
+margin_bottom = 125.0
+
+[node name="ChannelTextEdit" type="TextEdit" parent="HBoxContainer"]
+margin_right = 420.0
 margin_bottom = 50.0
-rect_min_size = Vector2( 225, 50 )
-mouse_filter = 1
-custom_fonts/font = ExtResource( 1 )
+rect_min_size = Vector2( 420, 50 )
 text = "Channel Name"
 
-[node name="ChannelNameWarning" type="TextureRect" parent="ChannelNameContainer/HBoxContainer/TextEditContainer"]
-margin_left = 175.0
-margin_right = 225.0
+[node name="JoinChannelButton" type="Button" parent="HBoxContainer"]
+margin_left = 424.0
+margin_right = 499.0
 margin_bottom = 50.0
-rect_min_size = Vector2( 50, 0 )
-size_flags_horizontal = 8
-size_flags_vertical = 5
-texture = ExtResource( 4 )
-expand = true
-stretch_mode = 1
-
-[node name="SaveButton" type="Button" parent="ChannelNameContainer/HBoxContainer"]
-margin_left = 229.0
-margin_right = 304.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 75, 50 )
-mouse_filter = 1
-custom_styles/hover = SubResource( 1 )
-custom_styles/normal = SubResource( 2 )
+rect_min_size = Vector2( 75, 0 )
 disabled = true
 text = "Join"
 
+[node name="ChannelJoinedLabel" type="Label" parent="HBoxContainer"]
+visible = false
+margin_left = 503.0
+margin_top = 18.0
+margin_right = 571.0
+margin_bottom = 32.0
+text = "Connected"
+
 [node name="Button" type="Button" parent="."]
-margin_top = 133.0
-margin_right = 304.0
-margin_bottom = 183.0
+margin_top = 129.0
+margin_right = 500.0
+margin_bottom = 179.0
 rect_min_size = Vector2( 0, 50 )
 text = "Reset Twitch Login"
 
@@ -90,11 +85,8 @@ custom_styles/normal = SubResource( 3 )
 text = "Press the twitch Icon to connect to twitch through a web browser.  Then enter the channel the vote bot will chat through and press \"join\".  A notification message should pop up in chat."
 autowrap = true
 
-[connection signal="pressed" from="ConnectButton" to="." method="start_twitch_auth"]
-[connection signal="mouse_entered" from="ChannelNameContainer/HBoxContainer" to="." method="_on_channel_container_mouse_entered"]
-[connection signal="mouse_exited" from="ChannelNameContainer/HBoxContainer" to="." method="_on_channel_container_mouse_exited"]
-[connection signal="focus_entered" from="ChannelNameContainer/HBoxContainer/TextEditContainer/ChannelNameText" to="." method="_on_channel_text_focus_entered"]
-[connection signal="focus_exited" from="ChannelNameContainer/HBoxContainer/TextEditContainer/ChannelNameText" to="." method="_on_channel_text_focus_exited"]
-[connection signal="text_changed" from="ChannelNameContainer/HBoxContainer/TextEditContainer/ChannelNameText" to="." method="_on_channel_name_text_changed"]
-[connection signal="pressed" from="ChannelNameContainer/HBoxContainer/SaveButton" to="." method="_on_save_channel_name_pressed"]
+[connection signal="pressed" from="HBoxContainer2/AuthenticateButton" to="." method="start_twitch_auth"]
+[connection signal="focus_entered" from="HBoxContainer/ChannelTextEdit" to="." method="_on_channel_text_focus_entered"]
+[connection signal="focus_exited" from="HBoxContainer/ChannelTextEdit" to="." method="_on_channel_text_focus_exited"]
+[connection signal="pressed" from="HBoxContainer/JoinChannelButton" to="." method="_on_save_channel_name_pressed"]
 [connection signal="pressed" from="Button" to="." method="_on_reset_twitch"]

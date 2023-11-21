@@ -17,6 +17,8 @@ func _init(_modLoader = ModLoader):
 	
 	ModLoaderMod.install_script_extension(ext_dir + "stages/loadout/LoadoutOption.gd")
 	ModLoaderMod.install_script_extension(ext_dir + "stages/loadout/LoadoutStage.gd")
+	
+	ModLoaderMod.install_script_extension(ext_dir + "systems/options/OptionsPanel.gd")
 
 func _ready():
 	auth_handler = OAuthTokenFetcher.new()
@@ -26,3 +28,5 @@ func _ready():
 	chat_controller = ChatController.new()
 	chat_controller.set_name("ChatController")
 	$"/root".call_deferred("add_child", chat_controller)
+	
+	chat_controller.connect_to_twitch()

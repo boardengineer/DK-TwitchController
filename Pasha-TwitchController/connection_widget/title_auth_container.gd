@@ -2,17 +2,16 @@ extends VBoxContainer
 
 var ChatController = preload("res://mods-unpacked/Pasha-TwitchController/chat_controller.gd")
 
-onready var twitch_button = $ConnectButton
+onready var twitch_button = $HBoxContainer2/AuthenticateButton
+onready var authenticated_label = $HBoxContainer2/AuthenticatedLabel
+onready var instruction_label = $InstructionLabel
 
-onready var channel_name_save_button = $ChannelNameContainer/HBoxContainer/SaveButton
-onready var channel_name_text_edit = $ChannelNameContainer/HBoxContainer/TextEditContainer/ChannelNameText
-onready var channel_name_warning = $ChannelNameContainer/HBoxContainer/TextEditContainer/ChannelNameWarning
-
-onready var tooltip_container = $TooltipContainer
+onready var join_channel_button = $HBoxContainer/JoinChannelButton
+onready var channel_text_edit = $HBoxContainer/ChannelTextEdit
+onready var channel_joined_label = $HBoxContainer/ChannelJoinedLabel
 
 var auth_handler
 var chat_controller
-var is_twitch_connected = false
 var twitch_oauth_complete = false
 
 func _ready():
@@ -23,59 +22,49 @@ func _ready():
 	auth_handler = $"/root/AuthHandler"
 	
 	if auth_handler.access_token != "":
-		channel_name_save_button.disabled = false
-		make_connect_button_green()
+		twitch_button.disabled = true
+		join_channel_button.disabled = false
+		authenticated_label.show()
 	
 	if auth_handler.channel != "":
-		channel_name_save_button.disabled = false
-		channel_name_text_edit.text = auth_handler.channel
+		join_channel_button.disabled = false
+		channel_text_edit.text = auth_handler.channel
 		_on_save_channel_name_pressed()
 	
-	auth_handler.connect("auth_in_progress", self, "make_connect_button_yellow")
 	auth_handler.connect("auth_failure", self, "make_connect_button_red")
 	auth_handler.connect("auth_success", self, "auth_success")
 	
 	chat_controller.connect("twitch_connected", self, "twitch_connected")
 	chat_controller.connect("login_attempt", self, "login_attempt_callback")
 	chat_controller.connect("twitch_disconnected", self, "twitch_disconnected")
-	chat_controller.connect_to_twitch()
+	
+	if not chat_controller.connected:
+		chat_controller.connect_to_twitch()
+	
+	update_instruction_label()
 
 func start_twitch_auth():
 	twitch_button.release_focus()
 	$"/root/AuthHandler".get_auth_code()
 
 func maybe_oauth_twitch():
-	if auth_handler.access_token != "" and is_twitch_connected and not twitch_oauth_complete:
+	if auth_handler.access_token != "" and chat_controller.connected and not twitch_oauth_complete:
 		chat_controller.authenticate_oauth(auth_handler.access_token) 
 
-func make_connect_button_red():
-	change_button_color(twitch_button, Color(.5,0,0))
-	
-func make_connect_button_yellow():
-	change_button_color(twitch_button, Color(.5,.5,0))
-
 func auth_success():
-	make_connect_button_green()
+	authenticated_label.show()
+	twitch_button.disabled = true
 	maybe_oauth_twitch()
-
-func make_connect_button_green():
-	change_button_color(twitch_button, Color(0,.5,0))
-
-func _on_channel_name_text_changed():
-	change_button_color(channel_name_save_button, Color(.5,.5,0))
+	update_instruction_label()
 
 func _on_save_channel_name_pressed():
-	if channel_name_text_edit.text == "":
+	if channel_text_edit.text == "":
 		return
 	
-	auth_handler.channel = channel_name_text_edit.text
+	auth_handler.channel = channel_text_edit.text
 	auth_handler.save_config_file()
 	
-	channel_name_warning.hide()
-	
-	change_button_color(channel_name_save_button, Color(0,.5,0))
-	channel_name_save_button.text = "Joined"
-	
+	update_instruction_label()
 	maybe_connect_to_channel()
 
 func change_button_color(button, color) -> void:
@@ -89,22 +78,20 @@ func change_button_color(button, color) -> void:
 
 func _on_channel_text_focus_entered():
 	if auth_handler.channel == "":
-		channel_name_text_edit.text = ""
-	channel_name_warning.hide()
+		channel_text_edit.text = ""
 
 func _on_channel_text_focus_exited():
-	if channel_name_text_edit.text == "":
-		channel_name_text_edit.text = "Channel Name"
-	
-	channel_name_warning.show()
+	if channel_text_edit.text == "":
+		channel_text_edit.text = "Channel Name"
 
 func twitch_connected():
-	is_twitch_connected = true
+	update_instruction_label()
 	maybe_oauth_twitch()
 
 func maybe_connect_to_channel() -> void:
 	var has_valid_channel = (auth_handler.channel != "")
 	if has_valid_channel:
+		channel_joined_label.show()
 		var channel = auth_handler.channel
 		chat_controller.join_channel(channel)
 		chat_controller.chat("[BOT] Dome Keeper Bot Joined", channel)
@@ -112,7 +99,7 @@ func maybe_connect_to_channel() -> void:
 func login_attempt_callback(success : bool) -> void:
 	if success:
 		twitch_oauth_complete = true
-		channel_name_save_button.disabled = false
+		join_channel_button.disabled = false
 		maybe_connect_to_channel()
 
 func twitch_disconnected():
@@ -120,9 +107,11 @@ func twitch_disconnected():
 
 func _on_reset_twitch():
 	auth_handler.restart()
-	twitch_oauth_complete = false
+	authenticated_label.hide()
+	channel_joined_label.hide()
 	
-	change_button_color(twitch_button, Color(.6,.6,.6))
+	twitch_button.disabled = false
+	twitch_oauth_complete = false
 	
 	# reset chat controller
 	$"/root".remove_child(chat_controller)
@@ -138,14 +127,19 @@ func _on_reset_twitch():
 	chat_controller.connect("twitch_disconnected", self, "twitch_disconnected")
 	chat_controller.connect_to_twitch()
 	
-	channel_name_text_edit.text = "Channel Name"
-	channel_name_save_button.text = "Join"
-	channel_name_save_button.disabled = true
-	channel_name_warning.show()
+	channel_text_edit.text = "Channel Name"
+	join_channel_button.disabled = true
+	update_instruction_label()
 
+func update_instruction_label() -> void:
+	instruction_label.text = get_instruction_string()
 
-func _on_channel_container_mouse_entered():
-	tooltip_container.show()
-
-func _on_channel_container_mouse_exited():
-	tooltip_container.hide()
+func get_instruction_string() -> String:
+	if auth_handler.access_token == "":
+		return "Please Authenticate Twitch"
+	elif not chat_controller.connected:
+		return "Connecting to twitch..."
+	elif auth_handler.channel == "":
+		return "Please Select a Channel to Join"
+	else:
+		return "Twitch Chat Connected, You're Good to Go"
